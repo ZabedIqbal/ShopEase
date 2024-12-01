@@ -1,286 +1,985 @@
 <?php
 
+namespace Faker;
+
+use Faker\Container\ContainerInterface;
+
 /**
- * Generates HTML from tokens.
- * @todo Refactor interface so that configuration/context is determined
- *       upon instantiation, no need for messy generateFromTokens() calls
- * @todo Make some of the more internal functions protected, and have
- *       unit tests work around that
+ * @property string $citySuffix
+ *
+ * @method string citySuffix()
+ *
+ * @property string $streetSuffix
+ *
+ * @method string streetSuffix()
+ *
+ * @property string $buildingNumber
+ *
+ * @method string buildingNumber()
+ *
+ * @property string $city
+ *
+ * @method string city()
+ *
+ * @property string $streetName
+ *
+ * @method string streetName()
+ *
+ * @property string $streetAddress
+ *
+ * @method string streetAddress()
+ *
+ * @property string $postcode
+ *
+ * @method string postcode()
+ *
+ * @property string $address
+ *
+ * @method string address()
+ *
+ * @property string $country
+ *
+ * @method string country()
+ *
+ * @property float $latitude
+ *
+ * @method float latitude($min = -90, $max = 90)
+ *
+ * @property float $longitude
+ *
+ * @method float longitude($min = -180, $max = 180)
+ *
+ * @property float[] $localCoordinates
+ *
+ * @method float[] localCoordinates()
+ *
+ * @property int $randomDigitNotNull
+ *
+ * @method int randomDigitNotNull()
+ *
+ * @property mixed $passthrough
+ *
+ * @method mixed passthrough($value)
+ *
+ * @property string $randomLetter
+ *
+ * @method string randomLetter()
+ *
+ * @property string $randomAscii
+ *
+ * @method string randomAscii()
+ *
+ * @property array $randomElements
+ *
+ * @method array randomElements($array = ['a', 'b', 'c'], $count = 1, $allowDuplicates = false)
+ *
+ * @property mixed $randomElement
+ *
+ * @method mixed randomElement($array = ['a', 'b', 'c'])
+ *
+ * @property int|string|null $randomKey
+ *
+ * @method int|string|null randomKey($array = [])
+ *
+ * @property array|string $shuffle
+ *
+ * @method array|string shuffle($arg = '')
+ *
+ * @property array $shuffleArray
+ *
+ * @method array shuffleArray($array = [])
+ *
+ * @property string $shuffleString
+ *
+ * @method string shuffleString($string = '', $encoding = 'UTF-8')
+ *
+ * @property string $numerify
+ *
+ * @method string numerify($string = '###')
+ *
+ * @property string $lexify
+ *
+ * @method string lexify($string = '????')
+ *
+ * @property string $bothify
+ *
+ * @method string bothify($string = '## ??')
+ *
+ * @property string $asciify
+ *
+ * @method string asciify($string = '****')
+ *
+ * @property string $regexify
+ *
+ * @method string regexify($regex = '')
+ *
+ * @property string $toLower
+ *
+ * @method string toLower($string = '')
+ *
+ * @property string $toUpper
+ *
+ * @method string toUpper($string = '')
+ *
+ * @property int $biasedNumberBetween
+ *
+ * @method int biasedNumberBetween($min = 0, $max = 100, $function = 'sqrt')
+ *
+ * @property string $hexColor
+ *
+ * @method string hexColor()
+ *
+ * @property string $safeHexColor
+ *
+ * @method string safeHexColor()
+ *
+ * @property array $rgbColorAsArray
+ *
+ * @method array rgbColorAsArray()
+ *
+ * @property string $rgbColor
+ *
+ * @method string rgbColor()
+ *
+ * @property string $rgbCssColor
+ *
+ * @method string rgbCssColor()
+ *
+ * @property string $rgbaCssColor
+ *
+ * @method string rgbaCssColor()
+ *
+ * @property string $safeColorName
+ *
+ * @method string safeColorName()
+ *
+ * @property string $colorName
+ *
+ * @method string colorName()
+ *
+ * @property string $hslColor
+ *
+ * @method string hslColor()
+ *
+ * @property array $hslColorAsArray
+ *
+ * @method array hslColorAsArray()
+ *
+ * @property string $company
+ *
+ * @method string company()
+ *
+ * @property string $companySuffix
+ *
+ * @method string companySuffix()
+ *
+ * @property string $jobTitle
+ *
+ * @method string jobTitle()
+ *
+ * @property int $unixTime
+ *
+ * @method int unixTime($max = 'now')
+ *
+ * @property \DateTime $dateTime
+ *
+ * @method \DateTime dateTime($max = 'now', $timezone = null)
+ *
+ * @property \DateTime $dateTimeAD
+ *
+ * @method \DateTime dateTimeAD($max = 'now', $timezone = null)
+ *
+ * @property string $iso8601
+ *
+ * @method string iso8601($max = 'now')
+ *
+ * @property string $date
+ *
+ * @method string date($format = 'Y-m-d', $max = 'now')
+ *
+ * @property string $time
+ *
+ * @method string time($format = 'H:i:s', $max = 'now')
+ *
+ * @property \DateTime $dateTimeBetween
+ *
+ * @method \DateTime dateTimeBetween($startDate = '-30 years', $endDate = 'now', $timezone = null)
+ *
+ * @property \DateTime $dateTimeInInterval
+ *
+ * @method \DateTime dateTimeInInterval($date = '-30 years', $interval = '+5 days', $timezone = null)
+ *
+ * @property \DateTime $dateTimeThisCentury
+ *
+ * @method \DateTime dateTimeThisCentury($max = 'now', $timezone = null)
+ *
+ * @property \DateTime $dateTimeThisDecade
+ *
+ * @method \DateTime dateTimeThisDecade($max = 'now', $timezone = null)
+ *
+ * @property \DateTime $dateTimeThisYear
+ *
+ * @method \DateTime dateTimeThisYear($max = 'now', $timezone = null)
+ *
+ * @property \DateTime $dateTimeThisMonth
+ *
+ * @method \DateTime dateTimeThisMonth($max = 'now', $timezone = null)
+ *
+ * @property string $amPm
+ *
+ * @method string amPm($max = 'now')
+ *
+ * @property string $dayOfMonth
+ *
+ * @method string dayOfMonth($max = 'now')
+ *
+ * @property string $dayOfWeek
+ *
+ * @method string dayOfWeek($max = 'now')
+ *
+ * @property string $month
+ *
+ * @method string month($max = 'now')
+ *
+ * @property string $monthName
+ *
+ * @method string monthName($max = 'now')
+ *
+ * @property string $year
+ *
+ * @method string year($max = 'now')
+ *
+ * @property string $century
+ *
+ * @method string century()
+ *
+ * @property string $timezone
+ *
+ * @method string timezone($countryCode = null)
+ *
+ * @property void $setDefaultTimezone
+ *
+ * @method void setDefaultTimezone($timezone = null)
+ *
+ * @property string $getDefaultTimezone
+ *
+ * @method string getDefaultTimezone()
+ *
+ * @property string $file
+ *
+ * @method string file($sourceDirectory = '/tmp', $targetDirectory = '/tmp', $fullPath = true)
+ *
+ * @property string $randomHtml
+ *
+ * @method string randomHtml($maxDepth = 4, $maxWidth = 4)
+ *
+ * @property string $imageUrl
+ *
+ * @method string imageUrl($width = 640, $height = 480, $category = null, $randomize = true, $word = null, $gray = false, string $format = 'png')
+ *
+ * @property string $image
+ *
+ * @method string image($dir = null, $width = 640, $height = 480, $category = null, $fullPath = true, $randomize = true, $word = null, $gray = false, string $format = 'png')
+ *
+ * @property string $email
+ *
+ * @method string email()
+ *
+ * @property string $safeEmail
+ *
+ * @method string safeEmail()
+ *
+ * @property string $freeEmail
+ *
+ * @method string freeEmail()
+ *
+ * @property string $companyEmail
+ *
+ * @method string companyEmail()
+ *
+ * @property string $freeEmailDomain
+ *
+ * @method string freeEmailDomain()
+ *
+ * @property string $safeEmailDomain
+ *
+ * @method string safeEmailDomain()
+ *
+ * @property string $userName
+ *
+ * @method string userName()
+ *
+ * @property string $password
+ *
+ * @method string password($minLength = 6, $maxLength = 20)
+ *
+ * @property string $domainName
+ *
+ * @method string domainName()
+ *
+ * @property string $domainWord
+ *
+ * @method string domainWord()
+ *
+ * @property string $tld
+ *
+ * @method string tld()
+ *
+ * @property string $url
+ *
+ * @method string url()
+ *
+ * @property string $slug
+ *
+ * @method string slug($nbWords = 6, $variableNbWords = true)
+ *
+ * @property string $ipv4
+ *
+ * @method string ipv4()
+ *
+ * @property string $ipv6
+ *
+ * @method string ipv6()
+ *
+ * @property string $localIpv4
+ *
+ * @method string localIpv4()
+ *
+ * @property string $macAddress
+ *
+ * @method string macAddress()
+ *
+ * @property string $word
+ *
+ * @method string word()
+ *
+ * @property array|string $words
+ *
+ * @method array|string words($nb = 3, $asText = false)
+ *
+ * @property string $sentence
+ *
+ * @method string sentence($nbWords = 6, $variableNbWords = true)
+ *
+ * @property array|string $sentences
+ *
+ * @method array|string sentences($nb = 3, $asText = false)
+ *
+ * @property string $paragraph
+ *
+ * @method string paragraph($nbSentences = 3, $variableNbSentences = true)
+ *
+ * @property array|string $paragraphs
+ *
+ * @method array|string paragraphs($nb = 3, $asText = false)
+ *
+ * @property string $text
+ *
+ * @method string text($maxNbChars = 200)
+ *
+ * @property bool $boolean
+ *
+ * @method bool boolean($chanceOfGettingTrue = 50)
+ *
+ * @property string $md5
+ *
+ * @method string md5()
+ *
+ * @property string $sha1
+ *
+ * @method string sha1()
+ *
+ * @property string $sha256
+ *
+ * @method string sha256()
+ *
+ * @property string $locale
+ *
+ * @method string locale()
+ *
+ * @property string $countryCode
+ *
+ * @method string countryCode()
+ *
+ * @property string $countryISOAlpha3
+ *
+ * @method string countryISOAlpha3()
+ *
+ * @property string $languageCode
+ *
+ * @method string languageCode()
+ *
+ * @property string $currencyCode
+ *
+ * @method string currencyCode()
+ *
+ * @property string $emoji
+ *
+ * @method string emoji()
+ *
+ * @property string $creditCardType
+ *
+ * @method string creditCardType()
+ *
+ * @property string $creditCardNumber
+ *
+ * @method string creditCardNumber($type = null, $formatted = false, $separator = '-')
+ *
+ * @property \DateTime $creditCardExpirationDate
+ *
+ * @method \DateTime creditCardExpirationDate($valid = true)
+ *
+ * @property string $creditCardExpirationDateString
+ *
+ * @method string creditCardExpirationDateString($valid = true, $expirationDateFormat = null)
+ *
+ * @property array $creditCardDetails
+ *
+ * @method array creditCardDetails($valid = true)
+ *
+ * @property string $iban
+ *
+ * @method string iban($countryCode = null, $prefix = '', $length = null)
+ *
+ * @property string $swiftBicNumber
+ *
+ * @method string swiftBicNumber()
+ *
+ * @property string $name
+ *
+ * @method string name($gender = null)
+ *
+ * @property string $firstName
+ *
+ * @method string firstName($gender = null)
+ *
+ * @property string $firstNameMale
+ *
+ * @method string firstNameMale()
+ *
+ * @property string $firstNameFemale
+ *
+ * @method string firstNameFemale()
+ *
+ * @property string $lastName
+ *
+ * @method string lastName($gender = null)
+ *
+ * @property string $title
+ *
+ * @method string title($gender = null)
+ *
+ * @property string $titleMale
+ *
+ * @method string titleMale()
+ *
+ * @property string $titleFemale
+ *
+ * @method string titleFemale()
+ *
+ * @property string $phoneNumber
+ *
+ * @method string phoneNumber()
+ *
+ * @property string $e164PhoneNumber
+ *
+ * @method string e164PhoneNumber()
+ *
+ * @property int $imei
+ *
+ * @method int imei()
+ *
+ * @property string $realText
+ *
+ * @method string realText($maxNbChars = 200, $indexSize = 2)
+ *
+ * @property string $realTextBetween
+ *
+ * @method string realTextBetween($minNbChars = 160, $maxNbChars = 200, $indexSize = 2)
+ *
+ * @property string $macProcessor
+ *
+ * @method string macProcessor()
+ *
+ * @property string $linuxProcessor
+ *
+ * @method string linuxProcessor()
+ *
+ * @property string $userAgent
+ *
+ * @method string userAgent()
+ *
+ * @property string $chrome
+ *
+ * @method string chrome()
+ *
+ * @property string $msedge
+ *
+ * @method string msedge()
+ *
+ * @property string $firefox
+ *
+ * @method string firefox()
+ *
+ * @property string $safari
+ *
+ * @method string safari()
+ *
+ * @property string $opera
+ *
+ * @method string opera()
+ *
+ * @property string $internetExplorer
+ *
+ * @method string internetExplorer()
+ *
+ * @property string $windowsPlatformToken
+ *
+ * @method string windowsPlatformToken()
+ *
+ * @property string $macPlatformToken
+ *
+ * @method string macPlatformToken()
+ *
+ * @property string $iosMobileToken
+ *
+ * @method string iosMobileToken()
+ *
+ * @property string $linuxPlatformToken
+ *
+ * @method string linuxPlatformToken()
+ *
+ * @property string $uuid
+ *
+ * @method string uuid()
  */
-class HTMLPurifier_Generator
+class Generator
 {
+    protected $providers = [];
+    protected $formatters = [];
+
+    private $container;
 
     /**
-     * Whether or not generator should produce XML output.
-     * @type bool
+     * @var UniqueGenerator
      */
-    private $_xhtml = true;
+    private $uniqueGenerator;
 
-    /**
-     * :HACK: Whether or not generator should comment the insides of <script> tags.
-     * @type bool
-     */
-    private $_scriptFix = false;
-
-    /**
-     * Cache of HTMLDefinition during HTML output to determine whether or
-     * not attributes should be minimized.
-     * @type HTMLPurifier_HTMLDefinition
-     */
-    private $_def;
-
-    /**
-     * Cache of %Output.SortAttr.
-     * @type bool
-     */
-    private $_sortAttr;
-
-    /**
-     * Cache of %Output.FlashCompat.
-     * @type bool
-     */
-    private $_flashCompat;
-
-    /**
-     * Cache of %Output.FixInnerHTML.
-     * @type bool
-     */
-    private $_innerHTMLFix;
-
-    /**
-     * Stack for keeping track of object information when outputting IE
-     * compatibility code.
-     * @type array
-     */
-    private $_flashStack = array();
-
-    /**
-     * Configuration for the generator
-     * @type HTMLPurifier_Config
-     */
-    protected $config;
-
-    /**
-     * @param HTMLPurifier_Config $config
-     * @param HTMLPurifier_Context $context
-     */
-    public function __construct($config, $context)
+    public function __construct(ContainerInterface $container = null)
     {
-        $this->config = $config;
-        $this->_scriptFix = $config->get('Output.CommentScriptContents');
-        $this->_innerHTMLFix = $config->get('Output.FixInnerHTML');
-        $this->_sortAttr = $config->get('Output.SortAttr');
-        $this->_flashCompat = $config->get('Output.FlashCompat');
-        $this->_def = $config->getHTMLDefinition();
-        $this->_xhtml = $this->_def->doctype->xml;
+        $this->container = $container ?: Container\ContainerBuilder::withDefaultExtensions()->build();
     }
 
     /**
-     * Generates HTML from an array of tokens.
-     * @param HTMLPurifier_Token[] $tokens Array of HTMLPurifier_Token
-     * @return string Generated HTML
+     * @template T of Extension\Extension
+     *
+     * @param class-string<T> $id
+     *
+     * @throws Extension\ExtensionNotFound
+     *
+     * @return T
      */
-    public function generateFromTokens($tokens)
+    public function ext(string $id): Extension\Extension
     {
-        if (!$tokens) {
-            return '';
+        if (!$this->container->has($id)) {
+            throw new Extension\ExtensionNotFound(sprintf(
+                'No Faker extension with id "%s" was loaded.',
+                $id,
+            ));
         }
 
-        // Basic algorithm
-        $html = '';
-        for ($i = 0, $size = count($tokens); $i < $size; $i++) {
-            if ($this->_scriptFix && $tokens[$i]->name === 'script'
-                && $i + 2 < $size && $tokens[$i+2] instanceof HTMLPurifier_Token_End) {
-                // script special case
-                // the contents of the script block must be ONE token
-                // for this to work.
-                $html .= $this->generateFromToken($tokens[$i++]);
-                $html .= $this->generateScriptFromToken($tokens[$i++]);
-            }
-            $html .= $this->generateFromToken($tokens[$i]);
+        $extension = $this->container->get($id);
+
+        if ($extension instanceof Extension\GeneratorAwareExtension) {
+            $extension = $extension->withGenerator($this);
         }
 
-        // Tidy cleanup
-        if (extension_loaded('tidy') && $this->config->get('Output.TidyFormat')) {
-            $tidy = new Tidy;
-            $tidy->parseString(
-                $html,
-                array(
-                   'indent'=> true,
-                   'output-xhtml' => $this->_xhtml,
-                   'show-body-only' => true,
-                   'indent-spaces' => 2,
-                   'wrap' => 68,
-                ),
-                'utf8'
-            );
-            $tidy->cleanRepair();
-            $html = (string) $tidy; // explicit cast necessary
-        }
+        return $extension;
+    }
 
-        // Normalize newlines to system defined value
-        if ($this->config->get('Core.NormalizeNewlines')) {
-            $nl = $this->config->get('Output.Newline');
-            if ($nl === null) {
-                $nl = PHP_EOL;
-            }
-            if ($nl !== "\n") {
-                $html = str_replace("\n", $nl, $html);
-            }
-        }
-        return $html;
+    public function addProvider($provider)
+    {
+        array_unshift($this->providers, $provider);
+
+        $this->formatters = [];
+    }
+
+    public function getProviders()
+    {
+        return $this->providers;
     }
 
     /**
-     * Generates HTML from a single token.
-     * @param HTMLPurifier_Token $token HTMLPurifier_Token object.
-     * @return string Generated HTML
+     * With the unique generator you are guaranteed to never get the same two
+     * values.
+     *
+     * <code>
+     * // will never return twice the same value
+     * $faker->unique()->randomElement(array(1, 2, 3));
+     * </code>
+     *
+     * @param bool $reset      If set to true, resets the list of existing values
+     * @param int  $maxRetries Maximum number of retries to find a unique value,
+     *                         After which an OverflowException is thrown.
+     *
+     * @throws \OverflowException When no unique value can be found by iterating $maxRetries times
+     *
+     * @return self A proxy class returning only non-existing values
      */
-    public function generateFromToken($token)
+    public function unique($reset = false, $maxRetries = 10000)
     {
-        if (!$token instanceof HTMLPurifier_Token) {
-            trigger_error('Cannot generate HTML from non-HTMLPurifier_Token object', E_USER_WARNING);
-            return '';
+        if ($reset || $this->uniqueGenerator === null) {
+            $this->uniqueGenerator = new UniqueGenerator($this, $maxRetries);
+        }
 
-        } elseif ($token instanceof HTMLPurifier_Token_Start) {
-            $attr = $this->generateAttributes($token->attr, $token->name);
-            if ($this->_flashCompat) {
-                if ($token->name == "object") {
-                    $flash = new stdClass();
-                    $flash->attr = $token->attr;
-                    $flash->param = array();
-                    $this->_flashStack[] = $flash;
-                }
-            }
-            return '<' . $token->name . ($attr ? ' ' : '') . $attr . '>';
+        return $this->uniqueGenerator;
+    }
 
-        } elseif ($token instanceof HTMLPurifier_Token_End) {
-            $_extra = '';
-            if ($this->_flashCompat) {
-                if ($token->name == "object" && !empty($this->_flashStack)) {
-                    // doesn't do anything for now
-                }
-            }
-            return $_extra . '</' . $token->name . '>';
+    /**
+     * Get a value only some percentage of the time.
+     *
+     * @param float $weight A probability between 0 and 1, 0 means that we always get the default value.
+     *
+     * @return self
+     */
+    public function optional(float $weight = 0.5, $default = null)
+    {
+        if ($weight > 1) {
+            trigger_deprecation('fakerphp/faker', '1.16', 'First argument ($weight) to method "optional()" must be between 0 and 1. You passed %f, we assume you meant %f.', $weight, $weight / 100);
+            $weight = $weight / 100;
+        }
 
-        } elseif ($token instanceof HTMLPurifier_Token_Empty) {
-            if ($this->_flashCompat && $token->name == "param" && !empty($this->_flashStack)) {
-                $this->_flashStack[count($this->_flashStack)-1]->param[$token->attr['name']] = $token->attr['value'];
-            }
-            $attr = $this->generateAttributes($token->attr, $token->name);
-             return '<' . $token->name . ($attr ? ' ' : '') . $attr .
-                ( $this->_xhtml ? ' /': '' ) // <br /> v. <br>
-                . '>';
+        return new ChanceGenerator($this, $weight, $default);
+    }
 
-        } elseif ($token instanceof HTMLPurifier_Token_Text) {
-            return $this->escape($token->data, ENT_NOQUOTES);
+    /**
+     * To make sure the value meet some criteria, pass a callable that verifies the
+     * output. If the validator fails, the generator will try again.
+     *
+     * The value validity is determined by a function passed as first argument.
+     *
+     * <code>
+     * $values = array();
+     * $evenValidator = function ($digit) {
+     *   return $digit % 2 === 0;
+     * };
+     * for ($i=0; $i < 10; $i++) {
+     *   $values []= $faker->valid($evenValidator)->randomDigit;
+     * }
+     * print_r($values); // [0, 4, 8, 4, 2, 6, 0, 8, 8, 6]
+     * </code>
+     *
+     * @param ?\Closure $validator  A function returning true for valid values
+     * @param int       $maxRetries Maximum number of retries to find a valid value,
+     *                              After which an OverflowException is thrown.
+     *
+     * @throws \OverflowException When no valid value can be found by iterating $maxRetries times
+     *
+     * @return self A proxy class returning only valid values
+     */
+    public function valid(?\Closure $validator = null, int $maxRetries = 10000)
+    {
+        return new ValidGenerator($this, $validator, $maxRetries);
+    }
 
-        } elseif ($token instanceof HTMLPurifier_Token_Comment) {
-            return '<!--' . $token->data . '-->';
+    public function seed($seed = null)
+    {
+        if ($seed === null) {
+            mt_srand();
         } else {
-            return '';
-
+            mt_srand((int) $seed, self::mode());
         }
     }
 
     /**
-     * Special case processor for the contents of script tags
-     * @param HTMLPurifier_Token $token HTMLPurifier_Token object.
+     * @see https://www.php.net/manual/en/migration83.deprecated.php#migration83.deprecated.random
+     */
+    private static function mode(): int
+    {
+        if (PHP_VERSION_ID < 80300) {
+            return MT_RAND_PHP;
+        }
+
+        return MT_RAND_MT19937;
+    }
+
+    public function format($format, $arguments = [])
+    {
+        return call_user_func_array($this->getFormatter($format), $arguments);
+    }
+
+    /**
+     * @param string $format
+     *
+     * @return callable
+     */
+    public function getFormatter($format)
+    {
+        if (isset($this->formatters[$format])) {
+            return $this->formatters[$format];
+        }
+
+        if (method_exists($this, $format)) {
+            $this->formatters[$format] = [$this, $format];
+
+            return $this->formatters[$format];
+        }
+
+        // "Faker\Core\Barcode->ean13"
+        if (preg_match('|^([a-zA-Z0-9\\\]+)->([a-zA-Z0-9]+)$|', $format, $matches)) {
+            $this->formatters[$format] = [$this->ext($matches[1]), $matches[2]];
+
+            return $this->formatters[$format];
+        }
+
+        foreach ($this->providers as $provider) {
+            if (method_exists($provider, $format)) {
+                $this->formatters[$format] = [$provider, $format];
+
+                return $this->formatters[$format];
+            }
+        }
+
+        throw new \InvalidArgumentException(sprintf('Unknown format "%s"', $format));
+    }
+
+    /**
+     * Replaces tokens ('{{ tokenName }}') with the result from the token method call
+     *
+     * @param string $string String that needs to bet parsed
+     *
      * @return string
-     * @warning This runs into problems if there's already a literal
-     *          --> somewhere inside the script contents.
      */
-    public function generateScriptFromToken($token)
+    public function parse($string)
     {
-        if (!$token instanceof HTMLPurifier_Token_Text) {
-            return $this->generateFromToken($token);
-        }
-        // Thanks <http://lachy.id.au/log/2005/05/script-comments>
-        $data = preg_replace('#//\s*$#', '', $token->data);
-        return '<!--//--><![CDATA[//><!--' . "\n" . trim($data) . "\n" . '//--><!]]>';
+        $callback = function ($matches) {
+            return $this->format($matches[1]);
+        };
+
+        return preg_replace_callback('/{{\s?(\w+|[\w\\\]+->\w+?)\s?}}/u', $callback, $string);
     }
 
     /**
-     * Generates attribute declarations from attribute array.
-     * @note This does not include the leading or trailing space.
-     * @param array $assoc_array_of_attributes Attribute array
-     * @param string $element Name of element attributes are for, used to check
-     *        attribute minimization.
-     * @return string Generated HTML fragment for insertion.
+     * Get a random MIME type
+     *
+     * @example 'video/avi'
      */
-    public function generateAttributes($assoc_array_of_attributes, $element = '')
+    public function mimeType()
     {
-        $html = '';
-        if ($this->_sortAttr) {
-            ksort($assoc_array_of_attributes);
-        }
-        foreach ($assoc_array_of_attributes as $key => $value) {
-            if (!$this->_xhtml) {
-                // Remove namespaced attributes
-                if (strpos($key, ':') !== false) {
-                    continue;
-                }
-                // Check if we should minimize the attribute: val="val" -> val
-                if ($element && !empty($this->_def->info[$element]->attr[$key]->minimized)) {
-                    $html .= $key . ' ';
-                    continue;
-                }
-            }
-            // Workaround for Internet Explorer innerHTML bug.
-            // Essentially, Internet Explorer, when calculating
-            // innerHTML, omits quotes if there are no instances of
-            // angled brackets, quotes or spaces.  However, when parsing
-            // HTML (for example, when you assign to innerHTML), it
-            // treats backticks as quotes.  Thus,
-            //      <img alt="``" />
-            // becomes
-            //      <img alt=`` />
-            // becomes
-            //      <img alt='' />
-            // Fortunately, all we need to do is trigger an appropriate
-            // quoting style, which we do by adding an extra space.
-            // This also is consistent with the W3C spec, which states
-            // that user agents may ignore leading or trailing
-            // whitespace (in fact, most don't, at least for attributes
-            // like alt, but an extra space at the end is barely
-            // noticeable).  Still, we have a configuration knob for
-            // this, since this transformation is not necesary if you
-            // don't process user input with innerHTML or you don't plan
-            // on supporting Internet Explorer.
-            if ($this->_innerHTMLFix) {
-                if (strpos($value, '`') !== false) {
-                    // check if correct quoting style would not already be
-                    // triggered
-                    if (strcspn($value, '"\' <>') === strlen($value)) {
-                        // protect!
-                        $value .= ' ';
-                    }
-                }
-            }
-            $html .= $key.'="'.$this->escape($value).'" ';
-        }
-        return rtrim($html);
+        return $this->ext(Extension\FileExtension::class)->mimeType();
     }
 
     /**
-     * Escapes raw text data.
-     * @todo This really ought to be protected, but until we have a facility
-     *       for properly generating HTML here w/o using tokens, it stays
-     *       public.
-     * @param string $string String data to escape for HTML.
-     * @param int $quote Quoting style, like htmlspecialchars. ENT_NOQUOTES is
-     *               permissible for non-attribute output.
-     * @return string escaped data.
+     * Get a random file extension (without a dot)
+     *
+     * @example avi
      */
-    public function escape($string, $quote = null)
+    public function fileExtension()
     {
-        // Workaround for APC bug on Mac Leopard reported by sidepodcast
-        // http://htmlpurifier.org/phorum/read.php?3,4823,4846
-        if ($quote === null) {
-            $quote = ENT_COMPAT;
-        }
-        return htmlspecialchars($string, $quote, 'UTF-8');
+        return $this->ext(Extension\FileExtension::class)->extension();
+    }
+
+    /**
+     * Get a full path to a new real file on the system.
+     */
+    public function filePath()
+    {
+        return $this->ext(Extension\FileExtension::class)->filePath();
+    }
+
+    /**
+     * Get an actual blood type
+     *
+     * @example 'AB'
+     */
+    public function bloodType(): string
+    {
+        return $this->ext(Extension\BloodExtension::class)->bloodType();
+    }
+
+    /**
+     * Get a random resis value
+     *
+     * @example '+'
+     */
+    public function bloodRh(): string
+    {
+        return $this->ext(Extension\BloodExtension::class)->bloodRh();
+    }
+
+    /**
+     * Get a full blood group
+     *
+     * @example 'AB+'
+     */
+    public function bloodGroup(): string
+    {
+        return $this->ext(Extension\BloodExtension::class)->bloodGroup();
+    }
+
+    /**
+     * Get a random EAN13 barcode.
+     *
+     * @example '4006381333931'
+     */
+    public function ean13(): string
+    {
+        return $this->ext(Extension\BarcodeExtension::class)->ean13();
+    }
+
+    /**
+     * Get a random EAN8 barcode.
+     *
+     * @example '73513537'
+     */
+    public function ean8(): string
+    {
+        return $this->ext(Extension\BarcodeExtension::class)->ean8();
+    }
+
+    /**
+     * Get a random ISBN-10 code
+     *
+     * @see http://en.wikipedia.org/wiki/International_Standard_Book_Number
+     *
+     * @example '4881416324'
+     */
+    public function isbn10(): string
+    {
+        return $this->ext(Extension\BarcodeExtension::class)->isbn10();
+    }
+
+    /**
+     * Get a random ISBN-13 code
+     *
+     * @see http://en.wikipedia.org/wiki/International_Standard_Book_Number
+     *
+     * @example '9790404436093'
+     */
+    public function isbn13(): string
+    {
+        return $this->ext(Extension\BarcodeExtension::class)->isbn13();
+    }
+
+    /**
+     * Returns a random number between $int1 and $int2 (any order)
+     *
+     * @example 79907610
+     */
+    public function numberBetween($int1 = 0, $int2 = 2147483647): int
+    {
+        return $this->ext(Extension\NumberExtension::class)->numberBetween((int) $int1, (int) $int2);
+    }
+
+    /**
+     * Returns a random number between 0 and 9
+     */
+    public function randomDigit(): int
+    {
+        return $this->ext(Extension\NumberExtension::class)->randomDigit();
+    }
+
+    /**
+     * Generates a random digit, which cannot be $except
+     */
+    public function randomDigitNot($except): int
+    {
+        return $this->ext(Extension\NumberExtension::class)->randomDigitNot((int) $except);
+    }
+
+    /**
+     * Returns a random number between 1 and 9
+     */
+    public function randomDigitNotZero(): int
+    {
+        return $this->ext(Extension\NumberExtension::class)->randomDigitNotZero();
+    }
+
+    /**
+     * Return a random float number
+     *
+     * @example 48.8932
+     */
+    public function randomFloat($nbMaxDecimals = null, $min = 0, $max = null): float
+    {
+        return $this->ext(Extension\NumberExtension::class)->randomFloat(
+            $nbMaxDecimals !== null ? (int) $nbMaxDecimals : null,
+            (float) $min,
+            $max !== null ? (float) $max : null,
+        );
+    }
+
+    /**
+     * Returns a random integer with 0 to $nbDigits digits.
+     *
+     * The maximum value returned is mt_getrandmax()
+     *
+     * @param int|null $nbDigits Defaults to a random number between 1 and 9
+     * @param bool     $strict   Whether the returned number should have exactly $nbDigits
+     *
+     * @example 79907610
+     */
+    public function randomNumber($nbDigits = null, $strict = false): int
+    {
+        return $this->ext(Extension\NumberExtension::class)->randomNumber(
+            $nbDigits !== null ? (int) $nbDigits : null,
+            (bool) $strict,
+        );
+    }
+
+    /**
+     * Get a version number in semantic versioning syntax 2.0.0. (https://semver.org/spec/v2.0.0.html)
+     *
+     * @param bool $preRelease Pre release parts may be randomly included
+     * @param bool $build      Build parts may be randomly included
+     *
+     * @example 1.0.0
+     * @example 1.0.0-alpha.1
+     * @example 1.0.0-alpha.1+b71f04d
+     */
+    public function semver(bool $preRelease = false, bool $build = false): string
+    {
+        return $this->ext(Extension\VersionExtension::class)->semver($preRelease, $build);
+    }
+
+    /**
+     * @deprecated
+     */
+    protected function callFormatWithMatches($matches)
+    {
+        trigger_deprecation('fakerphp/faker', '1.14', 'Protected method "callFormatWithMatches()" is deprecated and will be removed.');
+
+        return $this->format($matches[1]);
+    }
+
+    /**
+     * @param string $attribute
+     *
+     * @deprecated Use a method instead.
+     */
+    public function __get($attribute)
+    {
+        trigger_deprecation('fakerphp/faker', '1.14', 'Accessing property "%s" is deprecated, use "%s()" instead.', $attribute, $attribute);
+
+        return $this->format($attribute);
+    }
+
+    /**
+     * @param string $method
+     * @param array  $attributes
+     */
+    public function __call($method, $attributes)
+    {
+        return $this->format($method, $attributes);
+    }
+
+    public function __destruct()
+    {
+        $this->seed();
+    }
+
+    public function __wakeup()
+    {
+        $this->formatters = [];
     }
 }
-
-// vim: et sw=4 sts=4
